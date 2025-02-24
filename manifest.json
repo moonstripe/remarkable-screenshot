@@ -1,7 +1,7 @@
 {
 	"id": "remarkable-screenshot",
 	"name": "Remarkable Screenshot",
-	"version": "1.0.5",
+	"version": "1.0.6",
 	"minAppVersion": "0.15.0",
 	"description": "Add Remarkable 2.0 screenshots to your Obsidian notes.",
 	"author": "Obsidian",
