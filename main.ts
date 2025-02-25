@@ -75,6 +75,7 @@ export default class MyPlugin extends Plugin {
 			console.log("ran resnap-rs");
 			console.log(stdout);
 			console.log(stderr);
+			console.log("---");
 			return;
 		}
 	}
