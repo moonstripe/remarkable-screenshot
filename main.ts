@@ -61,7 +61,8 @@ export default class MyPlugin extends Plugin {
 	}
 
 	async callResnapRs() {
-		return await this.runProcess("resnap-rs", []);
+		let { stderr, stdout } = await this.runProcess("resnap-rs", []);
+		return;
 	}
 
 	async onload() {
@@ -152,6 +153,12 @@ export default class MyPlugin extends Plugin {
 	}
 
 	async saveSettings() {
+		if (
+			!process.env.REMARKABLE_IP ||
+			process.env.REMARKABLE_IP != this.settings.reMarkableIP
+		) {
+			process.env.REMARKABLE_IP = this.settings.reMarkableIP;
+		}
 		await this.saveData(this.settings);
 	}
 }
