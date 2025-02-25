@@ -3,6 +3,7 @@ import {
 	Editor,
 	MarkdownView,
 	Modal,
+	normalizePath,
 	Notice,
 	Plugin,
 	PluginSettingTab,
@@ -61,7 +62,16 @@ export default class MyPlugin extends Plugin {
 	}
 
 	async callResnapRs() {
-		let { stderr, stdout } = await this.runProcess("resnap-rs", []);
+		let basePath = this.app.vault.adapter.getResourcePath(
+			normalizePath(this.settings.imagesDir),
+		);
+		console.log(basePath);
+		let { stderr, stdout } = await this.runProcess("resnap-rs", [
+			"-i",
+			this.settings.reMarkableIP,
+			"-d",
+			this.settings.imagesDir,
+		]);
 		return;
 	}
 
@@ -153,12 +163,6 @@ export default class MyPlugin extends Plugin {
 	}
 
 	async saveSettings() {
-		if (
-			!process.env.REMARKABLE_IP ||
-			process.env.REMARKABLE_IP != this.settings.reMarkableIP
-		) {
-			process.env.REMARKABLE_IP = this.settings.reMarkableIP;
-		}
 		await this.saveData(this.settings);
 	}
 }
