@@ -8,34 +8,44 @@ import {
 	PluginSettingTab,
 	Setting,
 } from "obsidian";
+import { spawn } from "child_process";
 
 // Remember to rename these classes and interfaces!
 
 interface MyPluginSettings {
 	reMarkableIP: string;
+	imagesDir: string;
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
 	reMarkableIP: process.env.REMARKABLE_IP || "10.11.99.1",
+	imagesDir: "remarkable_screenshots",
 };
 
 export default class MyPlugin extends Plugin {
 	settings: MyPluginSettings;
+
+	callResnapRs() {
+		let output = spawn("resnap-rs");
+		console.log(output);
+	}
 
 	async onload() {
 		await this.loadSettings();
 
 		// This creates an icon in the left ribbon.
 		const ribbonIconEl = this.addRibbonIcon(
-			"dice",
-			"Sample Plugin",
+			"tablet",
+			"Remarkable 2.0 Screenshot",
 			(evt: MouseEvent) => {
 				// Called when the user clicks the icon.
+				// TODO: by default, screenshot. maybe open settings?
+				this.callResnapRs();
 				new Notice("This is a notice!");
 			},
 		);
 		// Perform additional things with the ribbon
-		ribbonIconEl.addClass("my-plugin-ribbon-class");
+		// ribbonIconEl.addClass("my-plugin-ribbon-class");
 
 		// This adds a status bar item to the bottom of the app. Does not work on mobile apps.
 		const statusBarItemEl = this.addStatusBarItem();

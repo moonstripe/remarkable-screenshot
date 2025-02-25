@@ -4,7 +4,7 @@
 	"version": "1.0.8",
 	"minAppVersion": "0.15.0",
 	"description": "Add Remarkable 2.0 screenshots to your Obsidian notes.",
-	"author": "Obsidian",
+	"author": "Kojin Glick",
 	"authorUrl": "https://kojinglick.com",
 	"fundingUrl": "https://kojinglick.com/pricing",
 	"isDesktopOnly": true
