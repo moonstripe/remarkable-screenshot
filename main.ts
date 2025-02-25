@@ -73,7 +73,7 @@ export default class MyPlugin extends Plugin {
 				`${basepath}/${this.settings.imagesDir || ""}`,
 			];
 			let { stdout } = await this.runProcess("resnap-rs", args);
-			return stdout;
+			return stdout.replace("\n", "");
 		}
 		throw new Error("something went wrong with callResnapRs");
 	}
