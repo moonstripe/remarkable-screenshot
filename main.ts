@@ -115,7 +115,7 @@ export default class MyPlugin extends Plugin {
 			editorCallback: async (editor: Editor, view: MarkdownView) => {
 				const new_file = await this.callResnapRs();
 				console.log(editor.getSelection());
-				editor.replaceSelection(`![[${new_file}]]`);
+				editor.replaceSelection(`![[${normalizePath(new_file)}]]`);
 			},
 		});
 
