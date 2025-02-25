@@ -66,12 +66,14 @@ export default class MyPlugin extends Plugin {
 		if (this.app.vault.adapter instanceof FileSystemAdapter) {
 			const basepath = this.app.vault.adapter.getBasePath();
 			console.log(basepath);
-			let { stderr, stdout } = await this.runProcess("resnap-rs", [
+			const args = [
 				"--ip-address",
 				this.settings.reMarkableIP,
 				"--directory",
 				`${basepath}/${this.settings.imagesDir || ""}`,
-			]);
+			];
+			console.log("args");
+			let { stderr, stdout } = await this.runProcess("resnap-rs", args);
 			console.log("ran resnap-rs");
 			console.log(stdout);
 			console.log(stderr);
