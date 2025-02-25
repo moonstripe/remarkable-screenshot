@@ -31,7 +31,6 @@ export default class MyPlugin extends Plugin {
 		executable_path: string,
 		args: string[],
 	): Promise<Record<"stderr" | "stdout", string>> {
-		console.log("started run process");
 		let outputs: Record<"stderr" | "stdout", string> = {
 			stderr: "",
 			stdout: "",
@@ -39,11 +38,9 @@ export default class MyPlugin extends Plugin {
 		return new Promise(function (resolve, reject) {
 			const process = spawn(executable_path, args);
 			process.stdout.on("data", (data: string) => {
-				console.log("stdout:", data);
 				outputs.stdout += data;
 			});
 			process.stderr.on("data", (data: string) => {
-				console.log("stderr:", data);
 				outputs.stderr += data;
 			});
 
@@ -66,24 +63,19 @@ export default class MyPlugin extends Plugin {
 		});
 	}
 
-	async callResnapRs() {
+	async callResnapRs(): Promise<string> {
 		if (this.app.vault.adapter instanceof FileSystemAdapter) {
 			const basepath = this.app.vault.adapter.getBasePath();
-			console.log(basepath);
 			const args = [
 				"--ip-address",
 				this.settings.reMarkableIP,
 				"--directory",
 				`${basepath}/${this.settings.imagesDir || ""}`,
 			];
-			console.log("args", args);
-			let { stderr, stdout } = await this.runProcess("resnap-rs", args);
-			console.log("ran resnap-rs");
-			console.log(stdout);
-			console.log(stderr);
-			console.log("---");
-			return;
+			let { stdout } = await this.runProcess("resnap-rs", args);
+			return stdout;
 		}
+		throw new Error("something went wrong with callResnapRs");
 	}
 
 	async onload() {
@@ -121,9 +113,9 @@ export default class MyPlugin extends Plugin {
 			id: "insert-remarkable-screenshot",
 			name: "Insert Remarkable Screeenshot",
 			editorCallback: async (editor: Editor, view: MarkdownView) => {
-				console.log(await this.callResnapRs());
+				const new_file = await this.callResnapRs();
 				console.log(editor.getSelection());
-				editor.replaceSelection("Took Screenshot");
+				editor.replaceSelection(`[[${new_file}]]`);
 			},
 		});
 
