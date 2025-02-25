@@ -1,6 +1,7 @@
 import {
 	App,
 	Editor,
+	FileSystemAdapter,
 	MarkdownView,
 	Modal,
 	normalizePath,
@@ -62,17 +63,17 @@ export default class MyPlugin extends Plugin {
 	}
 
 	async callResnapRs() {
-		let basePath = this.app.vault.adapter.getResourcePath(
-			normalizePath(this.settings.imagesDir),
-		);
-		console.log(basePath);
-		let { stderr, stdout } = await this.runProcess("resnap-rs", [
-			"-i",
-			this.settings.reMarkableIP,
-			"-d",
-			this.settings.imagesDir,
-		]);
-		return;
+		if (this.app.vault.adapter instanceof FileSystemAdapter) {
+			const basepath = this.app.vault.adapter.getBasePath();
+			console.log(basepath);
+			let { stderr, stdout } = await this.runProcess("resnap-rs", [
+				"-i",
+				this.settings.reMarkableIP,
+				"-d",
+				`${basepath}/${this.settings.imagesDir || ""}`,
+			]);
+			return;
+		}
 	}
 
 	async onload() {
