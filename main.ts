@@ -31,6 +31,7 @@ export default class MyPlugin extends Plugin {
 		executable_path: string,
 		args: string[],
 	): Promise<Record<"stderr" | "stdout", string>> {
+		console.log("started run process");
 		let outputs: Record<"stderr" | "stdout", string> = {
 			stderr: "",
 			stdout: "",
@@ -72,7 +73,7 @@ export default class MyPlugin extends Plugin {
 				"--directory",
 				`${basepath}/${this.settings.imagesDir || ""}`,
 			];
-			console.log("args");
+			console.log("args", args);
 			let { stderr, stdout } = await this.runProcess("resnap-rs", args);
 			console.log("ran resnap-rs");
 			console.log(stdout);
