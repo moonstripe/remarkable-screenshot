@@ -39,9 +39,11 @@ export default class MyPlugin extends Plugin {
 		return new Promise(function (resolve, reject) {
 			const process = spawn(executable_path, args);
 			process.stdout.on("data", (data: string) => {
+				console.log("stdout:", data);
 				outputs.stdout += data;
 			});
 			process.stderr.on("data", (data: string) => {
+				console.log("stderr:", data);
 				outputs.stderr += data;
 			});
 
