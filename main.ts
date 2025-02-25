@@ -72,6 +72,7 @@ export default class MyPlugin extends Plugin {
 				"--directory",
 				`${basepath}/${this.settings.imagesDir || ""}`,
 			]);
+			console.log(stdout);
 			return;
 		}
 	}
