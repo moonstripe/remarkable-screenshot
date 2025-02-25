@@ -67,9 +67,9 @@ export default class MyPlugin extends Plugin {
 			const basepath = this.app.vault.adapter.getBasePath();
 			console.log(basepath);
 			let { stderr, stdout } = await this.runProcess("resnap-rs", [
-				"-i",
+				"--ip-address",
 				this.settings.reMarkableIP,
-				"-d",
+				"--directory",
 				`${basepath}/${this.settings.imagesDir || ""}`,
 			]);
 			return;
