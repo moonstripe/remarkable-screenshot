@@ -113,9 +113,13 @@ export default class MyPlugin extends Plugin {
 			id: "insert-remarkable-screenshot",
 			name: "Insert Remarkable Screeenshot",
 			editorCallback: async (editor: Editor, view: MarkdownView) => {
-				const new_file = await this.callResnapRs();
+				const realPath = await this.callResnapRs();
+				const filePath = realPath
+					.split(`/${this.settings.imagesDir}/`)
+					.pop();
 				console.log(editor.getSelection());
-				editor.replaceSelection(`![[${normalizePath(new_file)}]]`);
+				const reference = `/${this.settings.imagesDir}/${filePath}`;
+				editor.replaceSelection(`![[${reference}]]`);
 			},
 		});
 
