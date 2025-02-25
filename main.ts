@@ -25,9 +25,43 @@ const DEFAULT_SETTINGS: MyPluginSettings = {
 export default class MyPlugin extends Plugin {
 	settings: MyPluginSettings;
 
-	callResnapRs() {
-		let output = spawn("resnap-rs");
-		console.log(output);
+	async runProcess(
+		executable_path: string,
+		args: string[],
+	): Promise<Record<"stderr" | "stdout", string>> {
+		let outputs: Record<"stderr" | "stdout", string> = {
+			stderr: "",
+			stdout: "",
+		};
+		return new Promise(function (resolve, reject) {
+			const process = spawn(executable_path, args);
+			process.stdout.on("data", (data: string) => {
+				outputs.stdout += data;
+			});
+			process.stderr.on("data", (data: string) => {
+				outputs.stderr += data;
+			});
+
+			process.on("close", async function (code: number) {
+				if (code === 0) {
+					resolve(outputs);
+				} else {
+					reject(
+						"Nonzero exitcode.\nSTDERR: " +
+							outputs.stderr +
+							"\nSTDOUT: " +
+							outputs.stdout,
+					);
+				}
+			});
+			process.on("error", function (err: string) {
+				reject(err);
+			});
+		});
+	}
+
+	async callResnapRs() {
+		return await this.runProcess("resnap-rs", []);
 	}
 
 	async onload() {
@@ -37,10 +71,10 @@ export default class MyPlugin extends Plugin {
 		const ribbonIconEl = this.addRibbonIcon(
 			"tablet",
 			"Remarkable 2.0 Screenshot",
-			(evt: MouseEvent) => {
+			async (evt: MouseEvent) => {
 				// Called when the user clicks the icon.
 				// TODO: by default, screenshot. maybe open settings?
-				this.callResnapRs();
+				await this.callResnapRs();
 				new Notice("This is a notice!");
 			},
 		);
@@ -148,6 +182,8 @@ class SampleSettingTab extends PluginSettingTab {
 		const { containerEl } = this;
 
 		containerEl.empty();
+
+		containerEl.createEl("h2", "Remarkable 2.0 Screenshot");
 
 		new Setting(containerEl)
 			.setName("Remarkable IP")
